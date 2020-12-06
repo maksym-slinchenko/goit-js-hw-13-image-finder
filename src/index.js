@@ -13,7 +13,7 @@ import parsPicturesList from "./temlates/pictures";
 // Переменные
 const KEY = "19420354-3227e9c850ee70e183cd8e591";
 const URL = "https://pixabay.com/api/";
-const pageNumber = 1;
+let pageNumber = 1;
 const quantityPerPage = 4;
 const searchTerm = document.querySelector("#search-form").value;
 //DOM-элементы
@@ -32,26 +32,27 @@ function cleanPicturesList(el) {
   el.innerHTML = "";
 }
 
-function getPicturesList() {
-  fetch(
-    `${URL}?key=${KEY}&q=${searchTerm}&per_page=${quantityPerPage}`
-  ).then((r) => console.log(r.json()));
-  // .then((r) => {
-  //   console.log(parsPicturesList(r));
-  //   cleanPicturesList(el), putPicturesIntoHTML(el, templateFunction, r);
-  // });
+function getPicturesList(el, templateFunction) {
+  fetch(`${URL}?key=${KEY}&q=${searchTerm}&per_page=${quantityPerPage}`)
+    .then((r) => r.json())
+    .then((r) => {
+      //   cleanPicturesList(el),
+      putPicturesIntoHTML(el, templateFunction, r);
+    });
   // .catch(
   //   cleanCountriesList(countriesListEl),
   //   cleanCountriesList(countryContainerEl)
   // );
 }
 
-getPicturesList();
+getPicturesList(galleryEl, parsPicturesList);
 
 function putPicturesIntoHTML(el, templateFunction, r) {
-  el.insertAdjacentHTML("beforeend", templateFunction(r));
+  el.insertAdjacentHTML("beforeend", templateFunction(r.hits));
 }
 console.log(getPicturesList(galleryEl, parsPicturesList));
 console.log(
-  fetch(`${URL}?key=${KEY}&q=${searchTerm}&per_page=${quantityPerPage}`)
+  fetch(
+    `${URL}?key=${KEY}&q=${searchTerm}&per_page=${quantityPerPage}`
+  ).then((r) => r.json())
 );
