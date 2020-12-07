@@ -1,1 +1,0 @@
-{"version":3,"sources":["styles.css"],"names":[],"mappings":"AAAA,EACE,qBACF,CACA,KACE,wBACF","file":"src.364aa164.css","sourceRoot":"..\\src","sourcesContent":["* {\r\n  box-sizing: border-box;\r\n}\r\nbody {\r\n  background-color: rgb(238, 231, 231);\r\n}\r\n"]}
