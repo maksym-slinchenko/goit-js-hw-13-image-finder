@@ -11,18 +11,25 @@
   </head>
   <body>
     <section>
-      <form class="search-form" id="search-form">
-        <input
-          value="cat"
-          type="text"
-          name="query"
-          autocomplete="off"
-          placeholder="Search images..."
-        />
-      </form>
-      <ul class="gallery" id="gallery">
-        <!-- Список <li> с карточками изображений -->
-      </ul>
+      <div class="main-container">
+        <h1 class="main-header">Pixabay</h1>
+        <p class="extra-main-header">Free images</p>
+        <form class="search-form" id="search-form">
+          <input
+            type="text"
+            name="query"
+            autocomplete="off"
+            placeholder="Search images..."
+            id="search-input"
+          />
+        </form>
+        <ul class="gallery" id="gallery">
+          <!-- Список <li> с карточками изображений -->
+        </ul>
+        <div id="button-container">
+          <button id="button" class="button-load-more">Load more</button>
+        </div>
+      </div>
     </section>
     <script src="index.js"></script>
   </body>

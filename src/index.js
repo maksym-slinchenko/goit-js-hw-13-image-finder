@@ -1,58 +1,57 @@
 import "./css/styles.css";
 import parsPicturesList from "./temlates/pictures";
 
-// Зарегистрироваться на REST API и получить ключ +
-// Функция для загрузки REST API по данным в инпуте +
-// Подготовить шаблон
-// Функция для парса шаблона
-// Кнопка для "Загрузить еще"
-// функция для автоматического скрола при загрузке следующей партии картинок
-
 // Библиотеки
-
+const debounce = require("lodash.debounce");
 // Переменные
 const KEY = "19420354-3227e9c850ee70e183cd8e591";
 const URL = "https://pixabay.com/api/";
 let pageNumber = 1;
-const quantityPerPage = 4;
-const searchTerm = document.querySelector("#search-form").value;
+const quantityPerPage = 12;
 //DOM-элементы
+const searchEl = document.querySelector("#search-input");
 const galleryEl = document.querySelector("#gallery");
-// Вызов фукции
-
-// Функция
-
-fetch(
-  `${URL}?key=${KEY}&image_type=photo&orientation=horizontal&q=${searchTerm}&page=${pageNumber}&per_page=${quantityPerPage}`
+const buttonContainerEl = document.querySelector("#button-container");
+const buttomEl = buttonContainerEl.querySelector("#button");
+// Вызов фукции поиска катинок по значению инпута
+searchEl.addEventListener(
+  "input",
+  debounce(() => {
+    cleanPicturesList(galleryEl);
+    if (searchEl.value !== "") {
+      addPicturesList(galleryEl, parsPicturesList);
+    }
+  }, 500)
 );
+// Функция запроса на API и рендеринга страницы
 
-console.log(`${URL}?key=${KEY}&q=${searchTerm}&per_page=${quantityPerPage}`);
-
-function cleanPicturesList(el) {
-  el.innerHTML = "";
-}
-
-function getPicturesList(el, templateFunction) {
-  fetch(`${URL}?key=${KEY}&q=${searchTerm}&per_page=${quantityPerPage}`)
+function addPicturesList(el, templateFunction) {
+  fetch(
+    `${URL}?key=${KEY}&q=${searchEl.value}&page=${pageNumber}&per_page=${quantityPerPage}`
+  )
     .then((r) => r.json())
     .then((r) => {
-      //   cleanPicturesList(el),
       putPicturesIntoHTML(el, templateFunction, r);
     });
-  // .catch(
-  //   cleanCountriesList(countriesListEl),
-  //   cleanCountriesList(countryContainerEl)
-  // );
 }
 
-getPicturesList(galleryEl, parsPicturesList);
-
+//  Функция добавления списка картинок в HTML
 function putPicturesIntoHTML(el, templateFunction, r) {
   el.insertAdjacentHTML("beforeend", templateFunction(r.hits));
 }
-console.log(getPicturesList(galleryEl, parsPicturesList));
-console.log(
-  fetch(
-    `${URL}?key=${KEY}&q=${searchTerm}&per_page=${quantityPerPage}`
-  ).then((r) => r.json())
-);
+
+// Функция очистки HTML для каждой итерации
+function cleanPicturesList(el) {
+  el.innerHTML = "";
+}
+// Функция загрузки доп. картинок
+function loadMorePictures() {
+  pageNumber += 1;
+  addPicturesList(galleryEl, parsPicturesList);
+}
+// Функция добавления новых картинок на страницу
+buttomEl.addEventListener("click", () => {
+  if (searchEl.value !== "") {
+    loadMorePictures();
+  }
+});
