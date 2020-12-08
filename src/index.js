@@ -1,8 +1,8 @@
 import "./css/styles.css";
 import parsPicturesList from "./temlates/pictures";
-import PictureList from "./js/api-service";
+import getPicturesList from "./js/api-service";
 
-// Библиотеки
+// блиотеки
 const debounce = require("lodash.debounce");
 // Переменные
 const KEY = "19420354-3227e9c850ee70e183cd8e591";
@@ -14,16 +14,6 @@ const searchEl = document.querySelector("#search-input");
 const galleryEl = document.querySelector("#gallery");
 const buttonContainerEl = document.querySelector("#button-container");
 const buttomEl = buttonContainerEl.querySelector("#button");
-// -----
-
-const pictureList = new PictureList(
-  URL,
-  KEY,
-  searchEl,
-  pageNumber,
-  quantityPerPage
-);
-// -----
 
 // Вызов фукции поиска картинок по значению инпута
 searchEl.addEventListener(
@@ -31,24 +21,14 @@ searchEl.addEventListener(
   debounce((e) => {
     cleanPicturesList(galleryEl);
     if (searchEl.value !== "") {
-      pictureList.getPicturesList().then((r) => {
-        putPicturesIntoHTML(galleryEl, parsPicturesList, r);
-      });
+      getPicturesList(URL, KEY, searchEl, pageNumber, quantityPerPage).then(
+        (r) => {
+          putPicturesIntoHTML(galleryEl, parsPicturesList, r);
+        }
+      );
     }
   }, 500)
 );
-
-// Функция запроса на API и рендеринга страницы
-
-// function addPicturesList(el, templateFunction) {
-//   fetch(
-//     `${URL}?key=${KEY}&q=${searchEl.value}&page=${pageNumber}&per_page=${quantityPerPage}`
-//   )
-//     .then((r) => r.json())
-//     .then((r) => {
-//       putPicturesIntoHTML(el, templateFunction, r);
-//     });
-// }
 
 //  Функция добавления списка картинок в HTML
 function putPicturesIntoHTML(el, templateFunction, r) {
@@ -61,9 +41,9 @@ function cleanPicturesList(el) {
 }
 // Функция загрузки доп. картинок
 function loadMorePictures() {
-  pictureList.getPicturesList().then((r) => {
+  pageNumber += 1;
+  getPicturesList(URL, KEY, searchEl, pageNumber, quantityPerPage).then((r) => {
     putPicturesIntoHTML(galleryEl, parsPicturesList, r);
-    pageNumber += 1;
     console.log(pageNumber);
   });
 }
